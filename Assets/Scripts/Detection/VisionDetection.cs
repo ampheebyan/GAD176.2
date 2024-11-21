@@ -10,6 +10,12 @@ public class VisionDetection : DetectionBase
     private Transform raycastOrigin;
 
     private List<GameObject> ignoredObjects = new List<GameObject>();
+
+    private void OnEnable()
+    {
+        this.type = DetectionType.player;
+    }
+
     public void FixedUpdate()
     {
         Collider[] sphereRaycast = Physics.OverlapSphere(transform.position + transform.forward * 1.2f, detectionRadius);
