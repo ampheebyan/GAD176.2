@@ -1,18 +1,22 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class DetectionMiddleman : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public DetectionBase[] detectionTypes;
+
+    private void OnEnable()
     {
-        
+        foreach (DetectionBase detectionType in detectionTypes)
+        {
+            detectionType.OnDetected += DetectionHandler;
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void DetectionHandler(object sender, BasePlayer player)
     {
-        
+        Debug.Log($"DetectionMiddleman: detected {player.gameObject.name}.");
     }
 }
