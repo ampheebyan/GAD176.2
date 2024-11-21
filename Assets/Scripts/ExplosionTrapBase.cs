@@ -18,13 +18,7 @@ public class ExplosionTrapBase : TrapBase
 
 
     }
-    public void OnTriggerEnter (Collider other) 
-    {
-        if(other.CompareTag("Player"))
-        {
-
-        }
-    }
+    
 
 
 
