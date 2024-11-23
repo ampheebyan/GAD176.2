@@ -4,7 +4,15 @@ using UnityEngine;
 
 namespace SpawnSystem
 {
-    public class Sam_PolySpawning : MonoBehaviour
+    // Base class for spawning systems
+    public abstract class SpawnManagerBase : MonoBehaviour
+    {
+        public abstract void SpawnItems();
+        protected abstract Vector3 GetValidSpawnPosition();
+    }
+
+    // Walkable spawn manager derived from the base
+    public class WalkableSpawnManager : SpawnManagerBase
     {
         [SerializeField] private GameObject[] itemsToSpawn;  // Prefabs to spawn
         [SerializeField] private GameObject[] spawnAreas;   // Objects defining spawn areas
@@ -14,14 +22,27 @@ namespace SpawnSystem
         [SerializeField] private LayerMask exclusionLayer;  // Layers to avoid during spawning
         [SerializeField] private LayerMask wallLayer;       // Layer for walls to raycast against
 
+        public static WalkableSpawnManager Instance { get; private set; } // Singleton instance
+
         public event Action<GameObject> OnItemSpawned; // Event for notifying when an item is spawned
+
+        private void Awake()
+        {
+            if (Instance != null)
+            {
+                Debug.LogError("Multiple instances of WalkableSpawnManager detected!");
+                Destroy(gameObject);
+                return;
+            }
+            Instance = this;
+        }
 
         private void Start()
         {
             SpawnItems();
         }
 
-        public void SpawnItems()
+        public override void SpawnItems()
         {
             for (int i = 0; i < numberOfItemsToSpawn; i++)
             {
@@ -45,9 +66,9 @@ namespace SpawnSystem
             }
         }
 
-        private Vector3 GetValidSpawnPosition()
+        protected override Vector3 GetValidSpawnPosition()
         {
-            int attempts = 50; // Limit the number of attempts to prevent infinite loops
+            int attempts = 50;
             while (attempts > 0)
             {
                 GameObject randomArea = spawnAreas[UnityEngine.Random.Range(0, spawnAreas.Length)];
