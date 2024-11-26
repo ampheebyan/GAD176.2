@@ -8,7 +8,7 @@ using UnityEngine;
 /// </summary>
 public class LocalPlayer : BasePlayer
 {
-    private void OnEnable()
+    protected void OnEnable()
     {
         if (TryGetComponent<MovementHandler>(out MovementHandler movementHandler))
         {

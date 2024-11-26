@@ -73,6 +73,8 @@ public class MovementHandler : MonoBehaviour
     [Tooltip("Don't edit anything in this, it will not reflect in the actual game. This is used as a visualisation of what debug information this object will return.")]
     private MovementHandlerDebugInformation _debugInformation = new MovementHandlerDebugInformation();
     
+    public event Action<MovementHandlerDebugInformation> OnDebugInformationChanged;
+    
     private void OnEnable()
     {
         if (TryGetComponent<CharacterController>(out _controller))
@@ -159,6 +161,7 @@ public class MovementHandler : MonoBehaviour
 
         _debugInformation.rotation = _rotation;
         _debugInformation.velocity = _velocity;
+        OnDebugInformationChanged?.Invoke(_debugInformation);
         // I should probably avoid GetAxis, and use the newer Input Manager, but I feel like we probably don't need that much control.
         // I could also probably implement my own form of GetAxis for keyboard stuff, because reading how GetAxis works from the Unity docs, it just is effectively a lerp between
         // -1 and 1 at steps of 0.05. Kinda easy, and would probably allow for the ability to "weight" movement.

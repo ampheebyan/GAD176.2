@@ -12,6 +12,13 @@ using UnityEngine;
 /// </summary>
 public class BasePlayer : MonoBehaviour
 {
+    public class BasePlayerDebug
+    {
+        public Vector2 health;
+        public bool IsInvulnerable;
+        public bool IsDetectable;
+    }
+    
     [Header("BasePlayer")] 
         [Header("Health")]
         [Tooltip("x = current, y = maximum.")]
@@ -19,10 +26,12 @@ public class BasePlayer : MonoBehaviour
     [SerializeField] private Vector2 health = new Vector2(100, 100); // x = current, y = maximum. easily assumed that x has a minimum of 0.
     [SerializeField] private bool invulnerable = false; // This will allow us to just make it so calls to health functions are pretty much ignored. For test dummies, and the like.
     [SerializeField] private bool detectable = false;
+
+    private BasePlayerDebug bpDebug = new BasePlayerDebug();
     public event EventHandler<BasePlayer> OnDeath; // You can hook into this for character specific death functionality.
-    
+    public event Action<BasePlayerDebug> OnBasePlayerDebugUpdate;
     public bool IsDetectable { get { return detectable; } }
-    
+
     #region Health Handling
     public float GetCurrentHealth()
     {
@@ -83,4 +92,20 @@ public class BasePlayer : MonoBehaviour
         return true;
     }
     #endregion
+
+    private void Awake()
+    {
+        bpDebug.IsInvulnerable = invulnerable;
+        bpDebug.IsDetectable = detectable;
+    }
+
+    private void Update()
+    {
+        if (bpDebug.health != health)
+        {
+            bpDebug.health = health;
+            OnBasePlayerDebugUpdate?.Invoke(bpDebug);
+        }
+        
+    }
 }
