@@ -24,6 +24,7 @@ public class MovementHandler : MonoBehaviour
     public class MovementHandlerDebugInformation
     {
         public MovementState currentMovementState;
+        public Vector3 position;
 
         public Vector2 rotation;
         public Vector2 velocity;
@@ -73,6 +74,8 @@ public class MovementHandler : MonoBehaviour
     [Tooltip("Don't edit anything in this, it will not reflect in the actual game. This is used as a visualisation of what debug information this object will return.")]
     private MovementHandlerDebugInformation _debugInformation = new MovementHandlerDebugInformation();
     
+    public event Action<MovementHandlerDebugInformation> OnDebugInformationChanged;
+    
     private void OnEnable()
     {
         if (TryGetComponent<CharacterController>(out _controller))
@@ -104,6 +107,7 @@ public class MovementHandler : MonoBehaviour
         _rotation.x = Mathf.Clamp(_rotation.x, -90f, 90f);
         
         _rotation.y -= mouseXY.x * cameraSensitivity.x;
+        _debugInformation.rotation = _rotation;
 
         transform.eulerAngles = new Vector3(0, _rotation.y * -1, 0);
         mainCamera.transform.localEulerAngles = new Vector3(_rotation.x, 0, 0);
@@ -129,12 +133,15 @@ public class MovementHandler : MonoBehaviour
         
         Physics.SyncTransforms();
         _controller.Move(motion);
+        _debugInformation.position = transform.position;
+
     }
 
     private void Gravity()
     {
         if (movementState.isGrounded && _velocity.y < 0) _velocity.y = -2f; 
         _velocity.y += -gravity * Time.deltaTime; // Physics! Kinda!
+        _debugInformation.velocity = _velocity;
     }
 
     public MovementHandlerDebugInformation GetDebugInformation()
@@ -156,9 +163,8 @@ public class MovementHandler : MonoBehaviour
         MoveController(new Vector2(
             Input.GetAxis("Horizontal"),
             Input.GetAxis("Vertical")));
-
-        _debugInformation.rotation = _rotation;
-        _debugInformation.velocity = _velocity;
+        
+        OnDebugInformationChanged?.Invoke(_debugInformation);
         // I should probably avoid GetAxis, and use the newer Input Manager, but I feel like we probably don't need that much control.
         // I could also probably implement my own form of GetAxis for keyboard stuff, because reading how GetAxis works from the Unity docs, it just is effectively a lerp between
         // -1 and 1 at steps of 0.05. Kinda easy, and would probably allow for the ability to "weight" movement.
