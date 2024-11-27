@@ -47,8 +47,8 @@ public class DebugMenu : MonoBehaviour
     
     private void OnDisable()
     {
-        movementHandler.OnDebugInformationChanged -= MovementHandlerDebug;
-        localPlayer.OnBasePlayerDebugUpdate -= BasePlayerDebug;
+        if(movementHandler) movementHandler.OnDebugInformationChanged -= MovementHandlerDebug;
+        if(localPlayer) localPlayer.OnBasePlayerDebugUpdate -= BasePlayerDebug;
     }
 
     private void BasePlayerDebug(BasePlayer.BasePlayerDebug _info)
