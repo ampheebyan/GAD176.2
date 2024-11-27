@@ -11,13 +11,13 @@ using static UnityEditor.FilePathAttribute;
 public class TrapBase : MonoBehaviour
 {
 
-    public List<GameObject> trapTagged = new List<GameObject>();
+    public List<BasePlayer> trapTagged = new List<BasePlayer>();
 
     public bool primed = false;
     public Vector3 objPos;
-    TestObject testObject;
-    public float damage = 50f;
-    public GameObject trap;
+    BasePlayer testObject;
+    public float damage = 25f;
+    
 
 
 
@@ -27,24 +27,29 @@ public class TrapBase : MonoBehaviour
     }
     public void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponent<TestObject>() != null)
+
+        Collider[] colliders = Physics.OverlapSphere(this.transform.position, 15f);
+
+        foreach (Collider collider in colliders)
         {
-            trapTagged.Add(gameObject);
-            primed = true;
-            
+            if (collider.TryGetComponent<BasePlayer>(out BasePlayer player))
+            {
+                primed = true;
+                trapTagged.Add(player);
+            }
         }
-        if (primed == true && trapTagged.Count >= 1)
-        {
-            AreaOfEffect();
-            Destroy(this.gameObject);
-        }
+
     }
-    public void AreaOfEffect() 
+    public void OnTriggerExit (Collider other)
     {
-        testObject.health = - damage;
-        
-        
+        if (other.TryGetComponent<BasePlayer>(out BasePlayer player))
+        {
+            trapTagged.Remove(player);
+        }
     }
+
+
+   
     public void Update()
     {
         
