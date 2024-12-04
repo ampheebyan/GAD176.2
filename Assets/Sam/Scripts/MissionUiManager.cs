@@ -1,37 +1,23 @@
 using UnityEngine;
 using TMPro;
-using System.Collections;
 
 public class MissionUIManager : MonoBehaviour
 {
-    public TextMeshProUGUI buttonText;
-    public GameObject button;
+    public TextMeshProUGUI missionPrompt;
 
-    public void EnableButton(bool enable)
+    public void UpdateMissionPrompt(string text)
     {
-        if (button != null)
+        if (missionPrompt != null)
         {
-            button.SetActive(enable);
+            missionPrompt.text = text;
         }
     }
 
-    public void UpdateButtonText(string text)
+    public void ClearMissionPrompt()
     {
-        if (buttonText != null)
+        if (missionPrompt != null)
         {
-            buttonText.text = text;
+            missionPrompt.text = "";
         }
-    }
-
-    public IEnumerator DisableButtonAndTextWithDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        EnableButton(false);
-        UpdateButtonText("");
-    }
-
-    public void ShowNextMissionText()
-    {
-        UpdateButtonText("Go to next mission");
     }
 }

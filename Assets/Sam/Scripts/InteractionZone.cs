@@ -1,32 +1,75 @@
 using UnityEngine;
+using TMPro;
 
 public class InteractionZone : MonoBehaviour
 {
-    public MissionUIManager uiButtonManager;
-    public string interactMessage = "Press 'E' to interact";
-    private bool isPlayerInRange = false;
+    public TextMeshProUGUI interactionPrompt; // Text for interaction prompt
+    private BaseMission attachedMission;      // The mission attached to this zone
+    private bool playerInRange = false;       // Tracks if the player is in range
+    private MissionManager missionManager;    // Reference to the Mission Manager
 
-    void OnTriggerEnter(Collider other)
+    private void Start()
     {
-        if (other.GetComponent<Sam_PlayeMovement>() != null)
+        attachedMission = GetComponent<BaseMission>();
+        missionManager = FindObjectOfType<MissionManager>();
+
+        if (interactionPrompt != null)
         {
-            isPlayerInRange = true;
-            uiButtonManager.EnableButton(true);
-            uiButtonManager.UpdateButtonText(interactMessage);
+            interactionPrompt.text = ""; // Clear prompt at start
         }
     }
 
-    void OnTriggerExit(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponent<Sam_PlayeMovement>() != null)
+        if (other.CompareTag("Player"))
         {
-            isPlayerInRange = false;
-            uiButtonManager.EnableButton(false);
+            playerInRange = true;
+
+            if (interactionPrompt != null)
+            {
+                interactionPrompt.text = $"Press 'E' to {attachedMission.missionName}";
+            }
         }
     }
 
-    public bool IsPlayerInRange()
+    private void OnTriggerExit(Collider other)
     {
-        return isPlayerInRange;
+        if (other.CompareTag("Player"))
+        {
+            playerInRange = false;
+
+            if (interactionPrompt != null)
+            {
+                interactionPrompt.text = ""; // Clear prompt when player leaves
+            }
+        }
+    }
+
+    private void Update()
+    {
+        if (playerInRange && Input.GetKeyDown(KeyCode.E))
+        {
+            InteractWithMission();
+        }
+    }
+
+    private void InteractWithMission()
+    {
+        if (attachedMission != null && !attachedMission.IsCompleted())
+        {
+            Debug.Log($"Interacting with mission: {attachedMission.missionName}");
+            attachedMission.CompleteMission();
+
+            if (missionManager != null)
+            {
+                missionManager.UpdateAllMissionStatuses();
+            }
+
+            // Clear the interaction prompt on completion
+            if (interactionPrompt != null)
+            {
+                interactionPrompt.text = "";
+            }
+        }
     }
 }

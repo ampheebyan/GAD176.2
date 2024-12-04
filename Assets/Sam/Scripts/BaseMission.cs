@@ -3,16 +3,18 @@ using UnityEngine;
 public class BaseMission : MonoBehaviour
 {
     public string missionName;
-    public string missionDescription;
     private bool isCompleted = false;
 
-    public delegate void MissionUpdatedHandler();
-    public event MissionUpdatedHandler OnMissionUpdated;
-
-    public void CompleteMission()
+    public virtual void CompleteMission()
     {
-        isCompleted = true;
-        OnMissionUpdated?.Invoke();
+        if (!isCompleted)
+        {
+            isCompleted = true;
+            Debug.Log($"Mission '{missionName}' completed!");
+
+            // Notify WinGame
+            FindObjectOfType<WinGame>()?.MissionCompleted();
+        }
     }
 
     public bool IsCompleted()

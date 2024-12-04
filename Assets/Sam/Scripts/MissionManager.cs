@@ -1,31 +1,49 @@
+using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using System.Collections.Generic;
 
 public class MissionManager : MonoBehaviour
 {
-    public List<BaseMission> missions = new List<BaseMission>();
-    public TextMeshProUGUI missionsStatusText;
+    public List<BaseMission> missions = new List<BaseMission>(); // Predefined missions
+    public TextMeshProUGUI missionStatusDisplay; // Text for mission statuses
 
-    void Start()
+    private void Start()
     {
-        UpdateAllMissionStatuses();
-    }
-
-    public void AddMission(BaseMission mission)
-    {
-        missions.Add(mission);
-        mission.OnMissionUpdated += UpdateAllMissionStatuses; // Subscribe to mission update event
         UpdateAllMissionStatuses();
     }
 
     public void UpdateAllMissionStatuses()
     {
-        missionsStatusText.text = "";
+        if (missionStatusDisplay == null) return;
+
+        missionStatusDisplay.text = ""; // Clear the display
+
         foreach (var mission in missions)
         {
-            string status = mission.IsCompleted() ? "done" : "not done";
-            missionsStatusText.text += $"{mission.missionName}: {status}\n";
+            string status = mission.IsCompleted() ? "Done" : "In Progress";
+            missionStatusDisplay.text += $"{mission.missionName}: {status}\n";
         }
     }
+
+    public void AddMission(BaseMission mission)
+    {
+        if (!missions.Contains(mission))
+        {
+            missions.Add(mission);
+            UpdateAllMissionStatuses();
+        }
+    }
+    public bool AreAllMissionsComplete()
+    {
+    foreach (var mission in missions)
+    {
+        if (!mission.IsCompleted())
+        {
+            return false;
+        }
+    }
+    return true;
+    }
+
+
 }

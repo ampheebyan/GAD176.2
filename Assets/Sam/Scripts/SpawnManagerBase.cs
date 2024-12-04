@@ -13,6 +13,6 @@ namespace SpawnSystem
         [SerializeField] protected LayerMask wallLayer;       // Layer for walls to raycast against
 
         public abstract void SpawnItems(); // Abstract method to spawn items
-        protected abstract Vector3 GetValidSpawnPosition(); // Abstract method to find valid spawn positions
+        protected abstract Vector3 GetValidSpawnPosition(); // Abstract method to find valid spawn positionss
     }
 }
