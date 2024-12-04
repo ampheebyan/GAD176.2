@@ -15,9 +15,15 @@ public class LandMine : TrapBase
     {
         if (primed == true && trapTagged.Count >= 1)
         {
-            Debug.Log("boom");
+            Debug.Log("In Range");
             
-            
+            foreach (BasePlayer player in trapTagged)
+            {
+                player.TakeDamage(damage * impactMod);
+            }
+             
+            Destroy(this.gameObject);
+
         }
     }
 
