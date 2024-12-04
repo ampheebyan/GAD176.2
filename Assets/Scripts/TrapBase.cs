@@ -15,7 +15,7 @@ public class TrapBase : MonoBehaviour
 
     public bool primed = false;
     public Vector3 objPos;
-    BasePlayer testObject;
+    BasePlayer basePlayer;
     public float damage = 25f;
     
 
@@ -27,15 +27,13 @@ public class TrapBase : MonoBehaviour
     }
     public void OnTriggerEnter(Collider other)
     {
-
-        Collider[] colliders = Physics.OverlapSphere(this.transform.position, 15f);
-
-        foreach (Collider collider in colliders)
+        Debug.Log("Trigger entered by: " + other.name);
         {
-            if (collider.TryGetComponent<BasePlayer>(out BasePlayer player))
+            if (other.TryGetComponent<BasePlayer>(out BasePlayer player))
             {
                 primed = true;
                 trapTagged.Add(player);
+                Debug.Log("Tagged: " +  player.name);
             }
         }
 
@@ -45,13 +43,11 @@ public class TrapBase : MonoBehaviour
         if (other.TryGetComponent<BasePlayer>(out BasePlayer player))
         {
             trapTagged.Remove(player);
+            Debug.Log("UnTagged: " + player.name);
         }
     }
 
 
    
-    public void Update()
-    {
-        
-    }
+    
 }

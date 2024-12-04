@@ -789,7 +789,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 5.2867, y: 0.120000005, z: 0.7511}
-  m_LocalScale: {x: 0.235024, y: 0.08790563, z: 0.2421246}
+  m_LocalScale: {x: 0.47871998, y: -0.122279316, z: 0.5337604}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -813,8 +813,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 5.478893, y: 17.124683, z: 5.424377}
+  m_Center: {x: -0.016064817, y: -8.06235, z: -0.0014224434}
 --- !u!23 &1250649628
 MeshRenderer:
   m_ObjectHideFlags: 0

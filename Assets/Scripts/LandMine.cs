@@ -1,20 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class LandMine : TrapBase
 {
 
     public float impactMod = 2f;
-
     
-   
 
-    public void OnTriggerEnter(Collider other)
+
+
+    void Update()
     {
-        if(primed == true && trapTagged.Count >= 1)
+        if (primed == true && trapTagged.Count >= 1)
         {
             Debug.Log("boom");
+            
+            
         }
     }
 
