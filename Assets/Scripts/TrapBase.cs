@@ -25,6 +25,8 @@ public class TrapBase : MonoBehaviour
     {
         
     }
+
+    //If PlayerBase script is detected on objects adds object to list
     public void OnTriggerEnter(Collider other)
     {
         Debug.Log("Trigger entered by: " + other.name);
@@ -38,6 +40,8 @@ public class TrapBase : MonoBehaviour
         }
 
     }
+
+    // If PlayerBase script is no longeer detected removes tag from object
     public void OnTriggerExit (Collider other)
     {
         if (other.TryGetComponent<BasePlayer>(out BasePlayer player))
