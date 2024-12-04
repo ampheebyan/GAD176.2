@@ -14,7 +14,7 @@ public class LandMine : TrapBase
 
     void Update()
     {
-        // Triggers the trap + Deals damage to tagged objects
+        /// Triggers the trap + Deals damage to tagged objects
         if (primed == true && trapTagged.Count >= 1)
         {
             Debug.Log("In Range");
