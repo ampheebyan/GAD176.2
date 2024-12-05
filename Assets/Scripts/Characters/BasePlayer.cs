@@ -22,11 +22,20 @@ namespace Characters
             public bool IsInvulnerable;
             public bool IsDetectable;
         }
+
+        public enum PlayerTypes
+        {
+            none,
+            local,
+            npc,
+            enemy
+        }
         
         [Header("BasePlayer")] 
             [Header("Health")]
             [Tooltip("x = current, y = maximum.")]
 
+        public PlayerTypes playerType = PlayerTypes.none;
         [SerializeField] private Vector2 health = new Vector2(100, 100); // x = current, y = maximum. easily assumed that x has a minimum of 0.
         [SerializeField] private bool invulnerable = false; // This will allow us to just make it so calls to health functions are pretty much ignored. For test dummies, and the like.
         [SerializeField] private bool detectable = false;
@@ -111,7 +120,6 @@ namespace Characters
                 bpDebug.health = health;
                 OnBasePlayerDebugUpdate?.Invoke(bpDebug);
             }
-            
         }
     }
 }

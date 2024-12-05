@@ -15,6 +15,8 @@ namespace Characters.LocalPlayer
     {
         protected void OnEnable()
         {
+            // Set playerType to local, and check if LocalPlayer is improperly used.
+            this.playerType = PlayerTypes.local;
             if (TryGetComponent<MovementHandler>(out MovementHandler movementHandler))
             {
                 // Failsafe in the event that localPlayer is put on something with no locally controlled movement.

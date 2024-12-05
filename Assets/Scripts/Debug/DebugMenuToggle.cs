@@ -26,19 +26,20 @@ namespace PDebug
         {
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.D))
             {
+                // Toggle debug
                 debugMenu.SetActive(!debugMenu.activeSelf);
                 GlobalReference.isDebug = debugMenu.activeSelf;
             }
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.T))
             {
-                if (!GlobalReference.isDebug) return;
                 if (GlobalReference.isDebugLog == false)
                 {
-                    loggingWarning.SetActive(true);
+                    if (!GlobalReference.isDebug) return; // Don't do anything if regular debugging isn't on.
+                    loggingWarning.SetActive(true); // Show warning UI
                 }
                 else
                 {
-                    GlobalReference.isDebugLog = false;
+                    GlobalReference.isDebugLog = false; // Turn it off if it's on
                 }
             }
         }

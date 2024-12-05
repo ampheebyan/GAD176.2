@@ -82,6 +82,7 @@ namespace Movement
         
         private void OnEnable()
         {
+            // Find character controller and set it.
             if (TryGetComponent<CharacterController>(out _controller))
             {
                 _defaultCharacterHeight = _controller.height;
@@ -100,6 +101,7 @@ namespace Movement
 
         private void LockMouse()
         {
+            // Lock/unlock cursor.
             Cursor.lockState = GlobalReference.isDebug ? CursorLockMode.None : _mouseLock ? CursorLockMode.Locked : CursorLockMode.None; // If _mouseLock is true, set lockState to locked, otherwise set to none.
             if (Input.GetMouseButtonDown(0) && !_mouseLock) _mouseLock = true; // If click on window, set _mL to true.
             else if (Input.GetKeyDown(KeyCode.Escape) && _mouseLock) _mouseLock = false; // If press escape, set _mL to false.
@@ -107,9 +109,11 @@ namespace Movement
 
         private void CameraHandling(Vector2 mouseXY)
         {
+            // Up/down
             _rotation.x -= mouseXY.y * cameraSensitivity.y;
             _rotation.x = Mathf.Clamp(_rotation.x, -90f, 90f);
             
+            // Left/right
             _rotation.y -= mouseXY.x * cameraSensitivity.x;
             _debugInformation.rotation = _rotation;
 
@@ -119,19 +123,23 @@ namespace Movement
         
         private void MoveController(Vector2 movementInput)
         {
+            // Set all specific variables
             movementState.isCrouching = Input.GetKey(KeyCode.LeftControl);
             movementState.isRunning = Input.GetKey(KeyCode.LeftShift);
             movementState.isGrounded = _controller.isGrounded;
             movementState.currentWalkSpeed = movementState.isCrouching ? crouchSpeed : movementState.isRunning ? runSpeed : walkSpeed; // One real fat ternary operator
             
+            // Crouch height handling
             mainCamera.transform.localPosition = movementState.isCrouching ? (_defaultCharacterCameraPosition - new Vector3(0, (_defaultCharacterHeight - crouchHeight) / 2.15f, 0)) : _defaultCharacterCameraPosition;
             _controller.height = movementState.isCrouching ? crouchHeight : _defaultCharacterHeight;
             
+            // Jumping
             if (Input.GetKey(KeyCode.Space) && movementState.isGrounded)
                 _velocity.y = Mathf.Sqrt(jumpHeight * -2f * -gravity);
 
             Gravity();
             
+            // Player movement
             Vector3 movement = transform.right * movementInput.x + transform.forward * movementInput.y;
             Vector3 motion = movement * (movementState.currentWalkSpeed * Time.deltaTime) + _velocity * Time.deltaTime;
             

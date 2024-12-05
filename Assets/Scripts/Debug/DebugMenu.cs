@@ -34,6 +34,8 @@ namespace PDebug
         
         private void OnEnable()
         {
+            // Handle looking to see if there are too many of the Local specific objects. Throw exception if too many.
+            
             if (FindObjectsByType<LocalPlayer>(FindObjectsSortMode.None).Length > 1)
             {
                 throw new Exception("There should only be one LocalPlayer in your scene, and there is more than one. Please ensure the only LocalPlayer component in your scene is on the local controlling player.");
@@ -44,12 +46,15 @@ namespace PDebug
                 throw new Exception("There should only be one MovementHandler in your scene, and there is more than one. Please ensure the only MovementHandler component in your scene is on the local controlling player.");
             }
 
+            // Find all AIControllers at start of scene and create debug tiles for them.
             aiControllerDebug = GameObject.FindObjectsByType<AIControllerDebug>(FindObjectsSortMode.None);
             RenewAIControllerDebugTiles();
             
+            // Find localPlayer and movementHandler
             localPlayer = FindObjectOfType<LocalPlayer>();
             movementHandler = FindObjectOfType<MovementHandler>();
             
+            // Hook into relevant debug events
             if(movementHandler) movementHandler.OnDebugInformationChanged += MovementHandlerDebug;
             else
             {
@@ -64,36 +69,28 @@ namespace PDebug
         
         private void OnDisable()
         {
+            // Unhook
             if(movementHandler) movementHandler.OnDebugInformationChanged -= MovementHandlerDebug;
             if(localPlayer) localPlayer.OnBasePlayerDebugUpdate -= BasePlayerDebug;
         }
 
         private void RenewAIControllerDebugTiles()
         {
-            Debug.Log("New debug tile");
-
-            Dictionary<AIControllerDebug, DebugMenuTile> debugTiles = debugMenuTiles;
+            Dictionary<AIControllerDebug, DebugMenuTile> debugTiles = debugMenuTiles; // Temporary array
             
             foreach (KeyValuePair<AIControllerDebug, DebugMenuTile> x in debugTiles)
             {
-                if (x.Key == null)
+                if (x.Key == null) // Remove AIControllerDebug tiles that don't exist now.
                 {
-                    debugMenuTiles.Remove(x.Key);
+                    debugMenuTiles.Remove(x.Key); 
                     Destroy(x.Value.gameObject);
                 }
             }
                 
-            foreach (AIControllerDebug aiControllerDebug in aiControllerDebug)
+            foreach (AIControllerDebug aiControllerDebug in aiControllerDebug) // Run through the updated array
             {
-                Debug.Log("New debug tile 1");
-
-                if (debugMenuTiles.TryGetValue(aiControllerDebug, out DebugMenuTile debugMenuTile))
+                if (!debugMenuTiles.TryGetValue(aiControllerDebug, out DebugMenuTile debugMenuTile)) // If there isn't a value, make one!
                 {
-                        
-                }
-                else
-                {
-                    Debug.Log("New debug tile 2");
                     GameObject newDebugMenuTile = Instantiate(debugMenuTilePrefab, debugTileParent);
                     DebugMenuTile ndmTScript = newDebugMenuTile.GetComponent<DebugMenuTile>();
                     debugMenuTiles.Add(aiControllerDebug, ndmTScript);                        
@@ -103,6 +100,7 @@ namespace PDebug
         
         private void Update()
         {
+            // Every 2 seconds look for new AIControllers, and if there's a difference between the previous and current, run through renewal of AIControllerDebugTiles.
             _timer += Time.deltaTime;
             if (_timer >= 2f)
             {
@@ -134,11 +132,13 @@ namespace PDebug
 
         private void BasePlayerDebug(BasePlayer.BasePlayerDebug _info)
         {
+            // Output of BasePlayer info
             if(GlobalReference.isDebugLog) Debug.Log($"DebugMenu: BasePlayerDebug: {_info.health}");
         }
         
         private void MovementHandlerDebug(MovementHandler.MovementHandlerDebugInformation _info)
         {
+            // Set movementhandler debug text
             movementHandlerDebugText.SetText($"{_info.position.x}, {_info.position.y}, {_info.position.z}\n" +
                                              $"Speed: {_info.currentMovementState.currentWalkSpeed}\n" +
                                              $"Grounded: {_info.currentMovementState.isGrounded}\n" +

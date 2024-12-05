@@ -8,22 +8,10 @@ using UnityEngine.EventSystems;
 /// </summary>
 namespace PDebug
 {
-    public class DebugMenu_Draggable : MonoBehaviour, IDragHandler, IPointerEnterHandler, IPointerExitHandler
+    public class DebugMenu_Draggable : MonoBehaviour, IDragHandler
     {
-        private bool _lock = true;
-
         [SerializeField] private Canvas canvas;
         [SerializeField] private RectTransform target;
-        
-        public void OnPointerEnter(PointerEventData eventData)
-        {
-            _lock = false;
-        }
-
-        public void OnPointerExit(PointerEventData eventData)
-        {
-            _lock = true;
-        }
 
         public void OnDrag(PointerEventData eventData)
         {
@@ -31,11 +19,11 @@ namespace PDebug
             {
                 if (target)
                 {
-                    target.anchoredPosition += eventData.delta / canvas.scaleFactor;
+                    target.anchoredPosition += eventData.delta / canvas.scaleFactor; // Move target based on drag delta
                 }
                 else
                 {
-                    (transform as RectTransform).anchoredPosition += eventData.delta / canvas.scaleFactor;
+                    (transform as RectTransform).anchoredPosition += eventData.delta / canvas.scaleFactor; // Move transform based on drag delta
                 }
             }
         }

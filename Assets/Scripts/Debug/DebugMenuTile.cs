@@ -14,7 +14,7 @@ namespace PDebug
         [SerializeField] private TMP_Text body;
         public void SetBody(string body)
         {
-            this.body.SetText(body);
+            this.body.SetText(body); // Set body text.
         }
     }
 }    

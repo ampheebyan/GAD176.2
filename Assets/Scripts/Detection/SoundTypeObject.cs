@@ -1,7 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+// Phoebe Faith
 
+///<summary>
+/// ScriptableObject that contains sound type data.
+/// </summary>
 namespace Detection.Sound
 {
     [CreateAssetMenu(fileName = "Data", menuName = "SoundEmitter/SoundType", order = 1)]
