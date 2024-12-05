@@ -43,6 +43,13 @@ namespace Characters
 
         private BasePlayer targetPlayer;
         private Transform target;
+
+        public Transform patrolTarget;
+
+        public Action<AIController> PatrolTargetReached;
+        private bool _patrolTargetLock = false;
+
+        public float patrolThreshold = 1.25f;
         private void Awake()
         {
             // Find player and navMeshAgent
@@ -84,12 +91,34 @@ namespace Characters
         {
             // If there is a player that is currently a target, set the destination to their position at all times.
             if(targetPlayer != null) agent.SetDestination(targetPlayer.transform.position);
-        }
+            else if (target != null) agent.SetDestination(target.position);
+            else if(patrolTarget != null) agent.SetDestination(patrolTarget.position);
 
+            if (patrolTarget)
+            {
+                float distance = (patrolTarget.position - transform.position).magnitude; // Distance between target and transform
+                
+                if (distance <= patrolThreshold) // If in threshold
+                {
+                    if (_patrolTargetLock == false) // If not locked
+                    {
+                        _patrolTargetLock = true; // Lock
+                        PatrolTargetReached?.Invoke(this); // Call event
+                    }                
+                }
+            }
+        }
+        
         public AIControllerDebugData GetDebugData()
         {
             // Obsolete
             return null;
+        }
+
+        public void SetNewPatrolTarget(Transform newTarget)
+        {
+            patrolTarget = newTarget; // Set new target
+            _patrolTargetLock = false; // Unlock
         }
         
         private void DetectionMiddlemanOnDetected(object sender, DetectionBase.DetectionEventData data)
