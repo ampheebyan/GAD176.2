@@ -1,3 +1,4 @@
+using Characters;
 using UnityEngine;
 using UnityEditor;
 
@@ -14,6 +15,7 @@ public class BasePlayer_Editor : Editor
                 Debug.Log($"<color=red>This does not work outside of Play Mode.</color>");
                 return;
             }
+            
             BasePlayer basePlayer;
             basePlayer = target as BasePlayer;
             basePlayer?.TakeDamage(10);

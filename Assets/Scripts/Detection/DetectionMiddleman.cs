@@ -3,42 +3,46 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DetectionMiddleman : MonoBehaviour
+namespace Detection
 {
-    public DetectionBase[] detectionTypes;
-    public bool currentDetection = false;
-
-    public float detectionTimeout = 5f;
-
-    private float _detectionTimeoutTimer = 0f;
-    
-    private void OnEnable()
+    public class DetectionMiddleman : MonoBehaviour
     {
-        foreach (DetectionBase detectionType in detectionTypes)
-        {
-            detectionType.OnDetected += PlayerDetectionHandler;
-        }
-    }
+        public DetectionBase[] detectionTypes;
+        public bool currentDetection = false;
 
-    private void Update()
-    {
-        if (currentDetection)
+        public float detectionTimeout = 5f;
+
+        private float _detectionTimeoutTimer = 0f;
+        
+        private void OnEnable()
         {
-            if (_detectionTimeoutTimer >= detectionTimeout)
+            foreach (DetectionBase detectionType in detectionTypes)
             {
-                Debug.Log($"DetectionMiddleman: timed out detection in {detectionTimeout} (full game time: {Time.time}).");
-                _detectionTimeoutTimer = 0f;
-                currentDetection = false;
-                return;
+                detectionType.OnDetected += PlayerDetectionHandler;
             }
-            _detectionTimeoutTimer += Time.deltaTime;
+        }
+
+        private void Update()
+        {
+            if (currentDetection)
+            {
+                if (_detectionTimeoutTimer >= detectionTimeout)
+                {
+                    Debug.Log($"DetectionMiddleman: timed out detection in {detectionTimeout} (full game time: {Time.time}).");
+                    _detectionTimeoutTimer = 0f;
+                    currentDetection = false;
+                    return;
+                }
+                _detectionTimeoutTimer += Time.deltaTime;
+            }
+        }
+
+        private void PlayerDetectionHandler(object sender, DetectionBase.DetectionEventData data)
+        {
+            Debug.Log($"DetectionMiddleman: detected: {(data.player ? "player" : "no player" )}, {(data.position ? "position" : "no position" )}.");
+            currentDetection = true;
+            _detectionTimeoutTimer = 0f;
         }
     }
-
-    private void PlayerDetectionHandler(object sender, DetectionBase.DetectionEventData data)
-    {
-        Debug.Log($"DetectionMiddleman: detected: {(data.player ? "player" : "no player" )}, {(data.position ? "position" : "no position" )}.");
-        currentDetection = true;
-        _detectionTimeoutTimer = 0f;
-    }
+    
 }
