@@ -3,21 +3,38 @@ using TMPro;
 
 public class MissionUIManager : MonoBehaviour
 {
-    public TextMeshProUGUI missionPrompt;
+    public TextMeshProUGUI missionStatusText; // Text for mission status
+    public TextMeshProUGUI winZoneMessage;    // Text for win zone message
 
-    public void UpdateMissionPrompt(string text)
+    public void UpdateMissionStatus(string status)
     {
-        if (missionPrompt != null)
+        if (missionStatusText != null)
         {
-            missionPrompt.text = text;
+            missionStatusText.text = status;
+        }
+        else
+        {
+            Debug.LogWarning("Mission status text not assigned.");
+        }
+    }
+
+    public void UpdateWinZoneMessage(string message)
+    {
+        if (winZoneMessage != null)
+        {
+            winZoneMessage.text = message;
+        }
+        else
+        {
+            Debug.LogWarning("Win zone message text not assigned.");
         }
     }
 
     public void ClearMissionPrompt()
     {
-        if (missionPrompt != null)
+        if (winZoneMessage != null)
         {
-            missionPrompt.text = "";
+            winZoneMessage.text = "";
         }
     }
 }

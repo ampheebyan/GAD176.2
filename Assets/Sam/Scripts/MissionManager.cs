@@ -1,49 +1,75 @@
-using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
+using System.Collections.Generic;
 
 public class MissionManager : MonoBehaviour
 {
-    public List<BaseMission> missions = new List<BaseMission>(); // Predefined missions
-    public TextMeshProUGUI missionStatusDisplay; // Text for mission statuses
+    public List<BaseMission> missions = new List<BaseMission>(); // List of all missions
+    public GameObject winZone; // Win zone GameObject
+    private int completedMissions = 0; // Counter for completed missions
+    private int requiredMissionsToWin = 2; // Number of missions required to activate the win zone
+
+    private MissionUIManager uiManager;
 
     private void Start()
     {
-        UpdateAllMissionStatuses();
-    }
+        uiManager = FindObjectOfType<MissionUIManager>();
 
-    public void UpdateAllMissionStatuses()
-    {
-        if (missionStatusDisplay == null) return;
-
-        missionStatusDisplay.text = ""; // Clear the display
-
-        foreach (var mission in missions)
+        if (uiManager != null)
         {
-            string status = mission.IsCompleted() ? "Done" : "In Progress";
-            missionStatusDisplay.text += $"{mission.missionName}: {status}\n";
+            uiManager.UpdateMissionStatus("Complete all missions.");
+            uiManager.UpdateWinZoneMessage("Complete 2 missions to unlock the win zone!");
+        }
+
+        if (winZone != null)
+        {
+            winZone.SetActive(false); // Ensure the win zone is initially disabled
         }
     }
 
-    public void AddMission(BaseMission mission)
+    public void MissionCompleted()
     {
-        if (!missions.Contains(mission))
+        completedMissions++;
+        Debug.Log($"Mission completed! Total completed missions: {completedMissions}/{requiredMissionsToWin}");
+        
+        // Update the UI
+        UpdateMissionUI();
+
+        // Check if all required missions are completed
+        if (completedMissions >= requiredMissionsToWin)
         {
-            missions.Add(mission);
-            UpdateAllMissionStatuses();
+            ActivateWinZone();
         }
     }
-    public bool AreAllMissionsComplete()
+
+    private void UpdateMissionUI()
     {
-    foreach (var mission in missions)
-    {
-        if (!mission.IsCompleted())
+        if (uiManager != null)
         {
-            return false;
+            uiManager.UpdateMissionStatus($"Missions completed: {completedMissions}/{requiredMissionsToWin}");
+        }
+        else
+        {
+            Debug.LogWarning("MissionUIManager not found. UI updates will not work.");
         }
     }
-    return true;
+
+    private void ActivateWinZone()
+    {
+        if (winZone != null)
+        {
+            winZone.SetActive(true);
+        }
+
+        if (uiManager != null)
+        {
+            uiManager.UpdateWinZoneMessage("Go back to the start to win!");
+        }
+
+        Debug.Log("Win zone activated!");
     }
 
-
+    public bool CompletedAllMissions()
+    {
+        return completedMissions >= requiredMissionsToWin;
+    }
 }

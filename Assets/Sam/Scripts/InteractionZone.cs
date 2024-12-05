@@ -1,21 +1,24 @@
 using UnityEngine;
-using TMPro;
 
 public class InteractionZone : MonoBehaviour
 {
-    public TextMeshProUGUI interactionPrompt; // Text for interaction prompt
-    private BaseMission attachedMission;      // The mission attached to this zone
-    private bool playerInRange = false;       // Tracks if the player is in range
-    private MissionManager missionManager;    // Reference to the Mission Manager
+    private BaseMission attachedMission;
+    private bool playerInRange = false;
+    private MissionUIManager uiManager;
 
     private void Start()
     {
         attachedMission = GetComponent<BaseMission>();
-        missionManager = FindObjectOfType<MissionManager>();
+        uiManager = FindObjectOfType<MissionUIManager>();
 
-        if (interactionPrompt != null)
+        if (attachedMission == null)
         {
-            interactionPrompt.text = ""; // Clear prompt at start
+            Debug.LogWarning($"No BaseMission attached to {gameObject.name}");
+        }
+
+        if (uiManager == null)
+        {
+            Debug.LogWarning("MissionUIManager not found in the scene.");
         }
     }
 
@@ -25,9 +28,9 @@ public class InteractionZone : MonoBehaviour
         {
             playerInRange = true;
 
-            if (interactionPrompt != null)
+            if (attachedMission != null && !attachedMission.IsCompleted())
             {
-                interactionPrompt.text = $"Press 'E' to {attachedMission.missionName}";
+                uiManager?.UpdateWinZoneMessage($"Press 'E' to {attachedMission.missionName}");
             }
         }
     }
@@ -37,11 +40,7 @@ public class InteractionZone : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playerInRange = false;
-
-            if (interactionPrompt != null)
-            {
-                interactionPrompt.text = ""; // Clear prompt when player leaves
-            }
+            uiManager?.ClearMissionPrompt();
         }
     }
 
@@ -59,17 +58,7 @@ public class InteractionZone : MonoBehaviour
         {
             Debug.Log($"Interacting with mission: {attachedMission.missionName}");
             attachedMission.CompleteMission();
-
-            if (missionManager != null)
-            {
-                missionManager.UpdateAllMissionStatuses();
-            }
-
-            // Clear the interaction prompt on completion
-            if (interactionPrompt != null)
-            {
-                interactionPrompt.text = "";
-            }
+            uiManager?.ClearMissionPrompt();
         }
     }
 }

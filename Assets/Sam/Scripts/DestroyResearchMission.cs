@@ -8,8 +8,11 @@ public class DestroyResearchMission : BaseMission
         Debug.Log($"Mission '{missionName}' started.");
     }
 
-    public override void CompleteMission()
+    private void Update()
     {
-        base.CompleteMission();
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            CompleteMission();
+        }
     }
 }

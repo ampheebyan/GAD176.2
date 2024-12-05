@@ -5,15 +5,19 @@ public class BaseMission : MonoBehaviour
     public string missionName;
     private bool isCompleted = false;
 
-    public virtual void CompleteMission()
+    public void CompleteMission()
     {
         if (!isCompleted)
         {
             isCompleted = true;
             Debug.Log($"Mission '{missionName}' completed!");
 
-            // Notify WinGame
-            FindObjectOfType<WinGame>()?.MissionCompleted();
+            // Notify MissionManager
+            var missionManager = FindObjectOfType<MissionManager>();
+            if (missionManager != null)
+            {
+                missionManager.MissionCompleted();
+            }
         }
     }
 
