@@ -12,7 +12,8 @@ namespace PDebug
     {
         private bool _lock = true;
 
-        [SerializeField] private Transform target;
+        [SerializeField] private Canvas canvas;
+        [SerializeField] private RectTransform target;
         
         public void OnPointerEnter(PointerEventData eventData)
         {
@@ -26,16 +27,15 @@ namespace PDebug
 
         public void OnDrag(PointerEventData eventData)
         {
-            if (_lock) return;
             if (Input.GetMouseButton(0))
             {
                 if (target)
                 {
-                    target.position = eventData.position;
+                    target.anchoredPosition += eventData.delta / canvas.scaleFactor;
                 }
                 else
                 {
-                    transform.position = eventData.position;
+                    (transform as RectTransform).anchoredPosition += eventData.delta / canvas.scaleFactor;
                 }
             }
         }

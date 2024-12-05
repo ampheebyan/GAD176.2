@@ -35,6 +35,7 @@ namespace Characters
         public event EventHandler<BasePlayer> OnDeath; // You can hook into this for character specific death functionality.
         public event Action<BasePlayerDebug> OnBasePlayerDebugUpdate;
         public bool IsDetectable { get { return detectable; } }
+        public bool IsInvulnerable { get { return detectable; } }
 
         #region Health Handling
         public float GetCurrentHealth()

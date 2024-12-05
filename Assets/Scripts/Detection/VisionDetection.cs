@@ -13,7 +13,7 @@ namespace Detection.Vision
         private Transform raycastOrigin;
 
         private List<GameObject> ignoredObjects = new List<GameObject>();
-
+        private Collider[] previous;
         private void OnEnable()
         {
             this.type = DetectionType.player;
@@ -22,20 +22,27 @@ namespace Detection.Vision
         public void FixedUpdate()
         {
             Collider[] sphereRaycast = Physics.OverlapSphere(transform.position + transform.forward * 1.2f, detectionRadius);
-            
+
             foreach (var rObj in sphereRaycast)
             {
+                if (previous != null)
+                {
+                    if (Enumerable.SequenceEqual(previous, sphereRaycast))
+                    {
+                        break;
+                    };
+                }
                 if (rObj.gameObject == gameObject) continue;
                 if (ignoredObjects.Contains(rObj.gameObject)) continue;
-                Debug.Log($"VisionDetection: {rObj.name} hit, checking for BasePlayer.");
+                if(GlobalReference.isDebugLog) Debug.Log($"VisionDetection: {rObj.name} hit, checking for BasePlayer.");
                 if (rObj.TryGetComponent<BasePlayer>(out BasePlayer player))
                 {
                     if (!player.IsDetectable)
                     {
-                        Debug.Log($"VisionDetection: {rObj.name} has BasePlayer, but is not listed as detectable.");
+                        if(GlobalReference.isDebugLog) Debug.Log($"VisionDetection: {rObj.name} has BasePlayer, but is not listed as detectable.");
                         continue;
                     }
-                    Debug.Log($"VisionDetection: {rObj.name} has BasePlayer, checking line of sight.");
+                    if(GlobalReference.isDebugLog) Debug.Log($"VisionDetection: {rObj.name} has BasePlayer, checking line of sight.");
                 
                     if (Physics.Linecast(raycastOrigin.transform.position, rObj.transform.position, out RaycastHit hit))
                     {
@@ -43,20 +50,21 @@ namespace Detection.Vision
                         if (hit.collider.gameObject == player.gameObject)
                         {
                             OnDetection(player); // If BasePlayer is found, call event.
-                            Debug.Log($"VisionDetection: {rObj.name} in line of sight.");
+                            if(GlobalReference.isDebugLog) Debug.Log($"VisionDetection: {rObj.name} in line of sight.");
                         }
                         else
                         {
-                            Debug.Log($"VisionDetection: {rObj.name} not in line of sight.");
+                            if(GlobalReference.isDebugLog) Debug.Log($"VisionDetection: {rObj.name} not in line of sight.");
                         }
                     }
                 }
                 else
                 {
-                    Debug.Log($"VisionDetection: {rObj.name} does not have a class derived from BasePlayer.");
+                    if(GlobalReference.isDebugLog) Debug.Log($"VisionDetection: {rObj.name} does not have a class derived from BasePlayer.");
                     ignoredObjects.Add(rObj.gameObject);
                 }
             }
+            previous = sphereRaycast;
         }
         private void OnDrawGizmos()
         {

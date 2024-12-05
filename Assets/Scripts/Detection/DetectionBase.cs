@@ -30,7 +30,6 @@ namespace Detection
         public float detectionLockTime = 5f;
         
         private bool _detectionLock;
-        private float _detectionLockTimer = 0;
 
         public DetectionType type;
 
@@ -56,7 +55,7 @@ namespace Detection
             /*_detectionLockTimer = 0f;
             if (_detectionLock) return;*/
             DetectionEventData data = new DetectionEventData();
-            Debug.Log($"DetectionBase: detected.");
+            if(GlobalReference.isDebugLog) Debug.Log($"DetectionBase: detected.");
             if(detectedPlayer) data.player = detectedPlayer;
             if(detectionPosition) data.position = detectionPosition;
             // Can't call events from derived classes, so call this.

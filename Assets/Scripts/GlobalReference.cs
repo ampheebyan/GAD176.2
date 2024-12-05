@@ -14,4 +14,5 @@ public static class GlobalReference
     public static List<string> ddolMutexes = new List<string>();
     public static LocalPlayer localPlayer;
     public static bool isDebug = false;
+    public static bool isDebugLog = false;
 }

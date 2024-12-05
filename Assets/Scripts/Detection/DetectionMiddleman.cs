@@ -7,13 +7,16 @@ namespace Detection
 {
     public class DetectionMiddleman : MonoBehaviour
     {
+        
+        public delegate void DetectedEventHandler(object sender, DetectionBase.DetectionEventData data);
+        public event DetectedEventHandler Detected;
+
+        public Action DetectedClear;
+        
         public DetectionBase[] detectionTypes;
         public bool currentDetection = false;
-
         public float detectionTimeout = 5f;
-
         private float _detectionTimeoutTimer = 0f;
-        
         private void OnEnable()
         {
             foreach (DetectionBase detectionType in detectionTypes)
@@ -28,9 +31,10 @@ namespace Detection
             {
                 if (_detectionTimeoutTimer >= detectionTimeout)
                 {
-                    Debug.Log($"DetectionMiddleman: timed out detection in {detectionTimeout} (full game time: {Time.time}).");
+                    if(GlobalReference.isDebugLog) Debug.Log($"DetectionMiddleman: timed out detection in {detectionTimeout} (full game time: {Time.time}).");
                     _detectionTimeoutTimer = 0f;
                     currentDetection = false;
+                    DetectedClear?.Invoke();
                     return;
                 }
                 _detectionTimeoutTimer += Time.deltaTime;
@@ -39,7 +43,8 @@ namespace Detection
 
         private void PlayerDetectionHandler(object sender, DetectionBase.DetectionEventData data)
         {
-            Debug.Log($"DetectionMiddleman: detected: {(data.player ? "player" : "no player" )}, {(data.position ? "position" : "no position" )}.");
+            if(GlobalReference.isDebugLog) Debug.Log($"DetectionMiddleman: detected: {(data.player ? "player" : "no player" )}, {(data.position ? "position" : "no position" )}.");
+            Detected?.Invoke(this, data);
             currentDetection = true;
             _detectionTimeoutTimer = 0f;
         }

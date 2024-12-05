@@ -16,7 +16,7 @@ namespace Detection.Sound
 
         public void HeardSound(Transform position)
         {
-            Debug.Log("SoundReceiver: Heard sound");
+            if(GlobalReference.isDebugLog) Debug.Log("SoundReceiver: Heard sound");
             OnDetection(null, position);
         }
     }
