@@ -15,9 +15,10 @@ public class InteractionZone : MonoBehaviour
         {
             Debug.LogError($"No BaseMission attached to {gameObject.name} or its parent.");
         }
-        else
+
+        if (uiManager == null)
         {
-            Debug.Log($"Attached Mission: {attachedMission.MissionName}");
+            Debug.LogError("MissionUIManager not found in the scene.");
         }
     }
 
@@ -26,9 +27,10 @@ public class InteractionZone : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playerInRange = true;
+
             if (attachedMission != null && !attachedMission.IsCompleted())
             {
-                uiManager?.UpdateWinZoneMessage($"Press 'E' to {attachedMission.MissionName}");
+                uiManager?.UpdateMissionPrompt($"Press 'E' to {attachedMission.MissionName}");
             }
         }
     }

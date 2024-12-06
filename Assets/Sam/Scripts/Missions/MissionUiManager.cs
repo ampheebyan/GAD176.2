@@ -4,8 +4,9 @@ using System.Collections.Generic;
 
 public class MissionUIManager : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI missionStatusText; // Text for mission statuses
-    [SerializeField] private TextMeshProUGUI winZoneMessage;    // Text for win zone message
+    [SerializeField] private TextMeshProUGUI missionStatusText; // Displays mission statuses
+    [SerializeField] private TextMeshProUGUI missionPromptText; // Displays mission prompts
+    [SerializeField] private TextMeshProUGUI winInstructionsText; // Displays win-related instructions
 
     private Dictionary<BaseMission, string> missionStatuses = new Dictionary<BaseMission, string>();
 
@@ -19,6 +20,12 @@ public class MissionUIManager : MonoBehaviour
         }
 
         UpdateMissionListUI();
+
+        // Set initial win instructions
+        if (winInstructionsText != null)
+        {
+            winInstructionsText.text = "Complete all missions and go back to the start to win!";
+        }
     }
 
     public void UpdateMissionStatus(BaseMission completedMission)
@@ -39,22 +46,30 @@ public class MissionUIManager : MonoBehaviour
         {
             missionList += $"{mission.Key.MissionName}: {mission.Value}\n";
         }
-        missionStatusText.text = missionList;
+        missionStatusText.text = missionList; // Update the mission status UI
     }
 
-    public void UpdateWinZoneMessage(string message)
+    public void UpdateMissionPrompt(string prompt)
     {
-        if (winZoneMessage != null)
+        if (missionPromptText != null)
         {
-            winZoneMessage.text = message;
+            missionPromptText.text = prompt; // Update the mission prompt UI
         }
     }
 
     public void ClearMissionPrompt()
     {
-        if (winZoneMessage != null)
+        if (missionPromptText != null)
         {
-            winZoneMessage.text = "";
+            missionPromptText.text = ""; // Clear mission prompt UI
+        }
+    }
+
+    public void UpdateWinInstructions(string message)
+    {
+        if (winInstructionsText != null)
+        {
+            winInstructionsText.text = message; // Update win instructions UI
         }
     }
 }

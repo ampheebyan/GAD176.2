@@ -12,7 +12,6 @@ public class MissionManager : MonoBehaviour
     {
         uiManager = FindObjectOfType<MissionUIManager>();
 
-        // Initialize the UI with all missions and their statuses
         if (uiManager != null)
         {
             uiManager.InitializeMissionList(missions);
@@ -28,13 +27,11 @@ public class MissionManager : MonoBehaviour
     {
         Debug.Log($"Mission '{completedMission.MissionName}' completed!");
 
-        // Notify the UI manager to update the mission status
         if (uiManager != null)
         {
             uiManager.UpdateMissionStatus(completedMission);
         }
 
-        // Check if all missions are completed
         if (AreAllMissionsCompleted())
         {
             ActivateWinZone();
@@ -47,7 +44,12 @@ public class MissionManager : MonoBehaviour
         {
             winZone.SetActive(true);
         }
-        uiManager?.UpdateWinZoneMessage("Go to the win zone to complete the game!");
+
+        if (uiManager != null)
+        {
+            uiManager.UpdateWinInstructions("All tasks complete! Go back to the start to win!");
+        }
+
         Debug.Log("Win zone activated!");
     }
 
