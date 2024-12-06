@@ -1,3 +1,6 @@
+/// <summary>
+/// A mission where the player destroys research objects to complete the task.
+/// </summary>
 using UnityEngine;
 
 public class DestroyResearchMission : BaseMission
@@ -7,4 +10,3 @@ public class DestroyResearchMission : BaseMission
         Debug.Log($"Mission '{MissionName}' started.");
     }
 }
-

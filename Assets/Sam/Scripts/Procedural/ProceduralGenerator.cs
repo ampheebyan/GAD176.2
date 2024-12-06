@@ -1,4 +1,7 @@
-
+/// <summary>
+/// Handles procedural generation of items in the scene using specified spawn modes 
+/// (CubeShaped or Irregular). Ensures valid spawn positions and collision constraints.
+/// </summary>
 using UnityEngine;
 
 namespace SpawnSystem
@@ -7,14 +10,17 @@ namespace SpawnSystem
     {
         public enum SpawnMode
         {
-            CubeShaped, // Use cube-shaped zones
-            Irregular   // Use irregular polygon-based zones
+            CubeShaped, // Use cube-shaped spawn zones
+            Irregular   // Use irregular polygon-based spawn zones most likely wont use
         }
 
         [Header("Spawn Settings")]
-        [SerializeField] private SpawnMode spawnMode = SpawnMode.CubeShaped; // Choose spawn mode
-        [SerializeField] private float minSpawnDistance = 1.0f;             // Minimum distance between objects
+        [SerializeField] private SpawnMode spawnMode = SpawnMode.CubeShaped; // Selects the spawn mode
+        [SerializeField] private float minSpawnDistance = 1.0f;             // Minimum distance between spawned items
 
+        /// <summary>
+        /// Spawns items based on the selected spawn mode and ensures valid positions.
+        /// </summary>
         public override void SpawnItems()
         {
             for (int i = 0; i < numberOfItemsToSpawn; i++)
@@ -38,6 +44,10 @@ namespace SpawnSystem
             }
         }
 
+        /// <summary>
+        /// Determines a valid spawn position based on the spawn mode and constraints.
+        /// <returns>A valid spawn position or Vector3.zero if none is found.</returns>
+        /// </summary>
         protected override Vector3 GetValidSpawnPosition()
         {
             int attempts = 50; // Limit attempts to prevent infinite loops
@@ -60,6 +70,9 @@ namespace SpawnSystem
             return Vector3.zero; // Return zero if no valid position is found
         }
 
+        /// <summary>
+        /// Gets a random position within a cube-shaped spawn area.
+        /// </summary>
         private Vector3 GetRandomPointInCubeArea()
         {
             GameObject randomArea = spawnAreas[Random.Range(0, spawnAreas.Length)];
@@ -79,6 +92,9 @@ namespace SpawnSystem
             );
         }
 
+        /// <summary>
+        /// Gets a random position within an irregular spawn area.
+        /// </summary>
         private Vector3 GetRandomPointInIrregularArea()
         {
             GameObject randomArea = spawnAreas[Random.Range(0, spawnAreas.Length)];
@@ -98,6 +114,10 @@ namespace SpawnSystem
             );
         }
 
+        /// <summary>
+        /// Validates the position to ensure no collisions and proper distance from other objects.
+        /// <returns>True if the position is valid; otherwise, false.</returns>
+        /// </summary>
         private bool IsPositionValid(Vector3 position)
         {
             // Ensure no collisions and enforce minimum spawn distance
@@ -114,6 +134,9 @@ namespace SpawnSystem
             return true;
         }
 
+        /// <summary>
+        /// Checks if the position is blocked by a wall using raycasting.
+        /// <returns>True if blocked by a wall; otherwise, false.</returns>
         private bool IsBlockedByWall(Vector3 position)
         {
             Ray ray = new Ray(position + Vector3.up * 2f, Vector3.down);
@@ -125,9 +148,11 @@ namespace SpawnSystem
             return false;
         }
 
+        /// <summary>
+        /// Draws spawn area gizmos in the scene view for visualization.
+        /// </summary>
         private void OnDrawGizmos()
         {
-            // Visualize spawn areas
             Gizmos.color = spawnMode == SpawnMode.CubeShaped ? Color.blue : Color.yellow;
 
             foreach (GameObject area in spawnAreas)
@@ -145,7 +170,7 @@ namespace SpawnSystem
 
         private void Start()
         {
-            SpawnItems();
+            SpawnItems(); // Begin spawning items on start
         }
     }
 }

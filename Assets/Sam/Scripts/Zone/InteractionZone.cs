@@ -1,25 +1,18 @@
+/// <summary>
+/// Handles player interactions within a specific zone, triggering mission-related prompts and actions.
+/// </summary>
 using UnityEngine;
 
 public class InteractionZone : MonoBehaviour
 {
     private BaseMission attachedMission;
-    private bool playerInRange = false;
     private MissionUIManager uiManager;
+    private bool playerInRange = false;
 
     private void Start()
     {
         attachedMission = GetComponentInParent<BaseMission>();
         uiManager = FindObjectOfType<MissionUIManager>();
-
-        if (attachedMission == null)
-        {
-            Debug.LogError($"No BaseMission attached to {gameObject.name} or its parent.");
-        }
-
-        if (uiManager == null)
-        {
-            Debug.LogError("MissionUIManager not found in the scene.");
-        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -27,10 +20,9 @@ public class InteractionZone : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playerInRange = true;
-
             if (attachedMission != null && !attachedMission.IsCompleted())
             {
-                uiManager?.UpdateMissionPrompt($"Press 'E' to {attachedMission.MissionName}");
+                uiManager.UpdateMissionPrompt($"Press 'E' to {attachedMission.MissionName}");
             }
         }
     }
@@ -40,25 +32,16 @@ public class InteractionZone : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playerInRange = false;
-            uiManager?.ClearMissionPrompt();
+            uiManager.ClearMissionPrompt();
         }
     }
 
     private void Update()
     {
-        if (playerInRange && Input.GetKeyDown(KeyCode.E))
+        if (playerInRange && Input.GetKeyDown(KeyCode.E) && attachedMission != null)
         {
-            InteractWithMission();
-        }
-    }
-
-    private void InteractWithMission()
-    {
-        if (attachedMission != null && !attachedMission.IsCompleted())
-        {
-            Debug.Log($"Interacting with mission: {attachedMission.MissionName}");
             attachedMission.CompleteMission();
-            uiManager?.ClearMissionPrompt();
+            uiManager.ClearMissionPrompt();
         }
     }
 }

@@ -1,3 +1,6 @@
+/// <summary>
+/// Updates mission-related UI elements, such as mission status, prompts, and win instructions.
+/// </summary>
 using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
@@ -10,6 +13,9 @@ public class MissionUIManager : MonoBehaviour
 
     private Dictionary<BaseMission, string> missionStatuses = new Dictionary<BaseMission, string>();
 
+    /// <summary>
+    /// Initializes the mission list UI.
+    /// </summary>
     public void InitializeMissionList(List<BaseMission> missions)
     {
         missionStatuses.Clear();
@@ -21,7 +27,6 @@ public class MissionUIManager : MonoBehaviour
 
         UpdateMissionListUI();
 
-        // Set initial win instructions
         if (winInstructionsText != null)
         {
             winInstructionsText.text = "Complete all missions and go back to the start to win!";
@@ -46,14 +51,14 @@ public class MissionUIManager : MonoBehaviour
         {
             missionList += $"{mission.Key.MissionName}: {mission.Value}\n";
         }
-        missionStatusText.text = missionList; // Update the mission status UI
+        missionStatusText.text = missionList;
     }
 
     public void UpdateMissionPrompt(string prompt)
     {
         if (missionPromptText != null)
         {
-            missionPromptText.text = prompt; // Update the mission prompt UI
+            missionPromptText.text = prompt;
         }
     }
 
@@ -61,7 +66,7 @@ public class MissionUIManager : MonoBehaviour
     {
         if (missionPromptText != null)
         {
-            missionPromptText.text = ""; // Clear mission prompt UI
+            missionPromptText.text = "";
         }
     }
 
@@ -69,7 +74,7 @@ public class MissionUIManager : MonoBehaviour
     {
         if (winInstructionsText != null)
         {
-            winInstructionsText.text = message; // Update win instructions UI
+            winInstructionsText.text = message;
         }
     }
 }

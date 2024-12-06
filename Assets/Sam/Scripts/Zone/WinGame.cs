@@ -1,3 +1,6 @@
+/// <summary>
+/// Detects when the player enters the win zone and handles game-ending logic.
+/// </summary>
 using UnityEngine;
 using System.Collections;
 
@@ -10,29 +13,18 @@ public class WinGame : MonoBehaviour
             var missionManager = FindObjectOfType<MissionManager>();
             if (missionManager != null && missionManager.AreAllMissionsCompleted())
             {
-                var uiManager = FindObjectOfType<MissionUIManager>();
-                if (uiManager != null)
-                {
-                    uiManager.UpdateWinInstructions("Congratulations! You Win! Thanks for playing!");
-                }
-
+                Debug.Log("All missions complete! Ending game...");
                 StartCoroutine(EndGameAfterDelay(3f));
-            }
-            else
-            {
-                var uiManager = FindObjectOfType<MissionUIManager>();
-                if (uiManager != null)
-                {
-                    uiManager.UpdateWinInstructions("Complete all tasks before accessing the win zone!");
-                }
             }
         }
     }
 
+    /// <summary>
+    /// Ends the game after a delay.
+    /// </summary>
     private IEnumerator EndGameAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else
