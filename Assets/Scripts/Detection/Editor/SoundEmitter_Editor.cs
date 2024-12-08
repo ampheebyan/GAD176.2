@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Detection.Sound;
+using UnityEngine;
 using UnityEditor;
 
 [CustomEditor(typeof(SoundEmitter), true)]

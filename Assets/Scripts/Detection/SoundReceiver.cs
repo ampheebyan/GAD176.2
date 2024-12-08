@@ -3,18 +3,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SoundReceiver : DetectionBase
+
+// Phoebe Faith
+
+///<summary>
+/// Contains logic for receiving the "sound" from SoundEmitter.cs
+/// </summary>
+namespace Detection.Sound
 {
-    public float volumeThreshold = 0.5f;
-
-    private void OnEnable()
+    public class SoundReceiver : DetectionBase
     {
-        this.type = DetectionType.position;
-    }
+        public float volumeThreshold = 0.5f;
 
-    public void HeardSound(Transform position)
-    {
-        Debug.Log("SoundReceiver: Heard sound");
-        OnDetection(null, position);
+        private void OnEnable()
+        {
+            this.type = DetectionType.position;
+        }
+
+        public void HeardSound(Transform position)
+        {
+            if(GlobalReference.isDebugLog) Debug.Log("SoundReceiver: Heard sound");
+            OnDetection(null, position); // Trigger DetectionBase's onDetection
+        }
     }
 }
