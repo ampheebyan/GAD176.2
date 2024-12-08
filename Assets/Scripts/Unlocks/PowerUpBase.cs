@@ -5,8 +5,9 @@ using UnityEngine.UIElements;
 
 public class PowerUpBase : MonoBehaviour
 {
+    // Code by Joshua Stapleton, 1032020
 
-    // public MessageLog messageLog;
+    // public UIScript UILog;
     // public MovementHandler movementHandler;
     public Sam_PlayeMovement movementHandler;
     public GameObject player;
@@ -14,11 +15,9 @@ public class PowerUpBase : MonoBehaviour
     public string[] powerUpNames = new string[4] { "Jump Boost", "Jump Boost+", "Speed Boost", "Speed Boost+" };
 
     private float rotateSpeed;
+    public float effectLength; 
 
 
-
-
-    // Start is called before the first frame update
     void Start()
     {
         // movementHandler = FindObjectOfType<MovementHandler>();
@@ -28,21 +27,35 @@ public class PowerUpBase : MonoBehaviour
         rotateSpeed = 50f;
     }
 
-    // Update is called once per frame
+
+
     void Update()
     {
-        // adds constant spin to object
+        // Adds a passive spin to the pick up in gameworld
         transform.Rotate(0f, rotateSpeed * Time.deltaTime, 0f, Space.Self);
     }
 
-    private void OnTriggerEnter(Collider other)
+
+
+
+    // Detects player collision and does "pick-up" from game world.
+    void OnTriggerEnter(Collider other)
     {
 
         if (other.gameObject == player)
         {
             Debug.Log("Player collision detected");
+            PowerUpEffect();
+            // Sound effect to pick up here
             Destroy(gameObject);
         }
+    }
+
+
+    // Override template for inheriting script
+    protected virtual void PowerUpEffect()
+    {
+        Debug.Log("Blank power up");
     }
 }
 

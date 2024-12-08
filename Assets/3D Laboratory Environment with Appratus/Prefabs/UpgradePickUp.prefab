@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6701346564487230233}
   - component: {fileID: 3098117342251801859}
   - component: {fileID: 5332395417973524547}
-  - component: {fileID: 4454193637141423743}
+  - component: {fileID: -2188649493472805855}
   m_Layer: 0
   m_Name: UpgradePickUp
   m_TagString: Untagged
@@ -106,7 +106,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4454193637141423743
+--- !u!114 &-2188649493472805855
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -115,7 +115,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2617305040780274229}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af8fed9957a2a894a8ffc7d1d7faac5f, type: 3}
+  m_Script: {fileID: 11500000, guid: b821ea5fd5dec4442bb81931043dbce7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   movementHandler: {fileID: 0}
@@ -126,3 +126,4 @@ MonoBehaviour:
   - Jump Boost+
   - Speed Boost
   - Speed Boost+
+  effectLength: 0
