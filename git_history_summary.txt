@@ -1,0 +1,67 @@
+* 3c0ba06 (HEAD -> develop, origin/sam, sam) Commit Same as before tying o fit scripts to citeria
+* 0919dc2 Fixed a lo of scipts and added some criteia that is needed for a pass
+* dbc9fb7 trying to fix current scrips
+* 5506d6a Did missions fixing them, as well as improving upon proc gen to try fit the code citeria
+* 317b387 Made missions scripts
+* 14f7239 Just doing scene changes
+*   4dad95a Merge branch 'sam' of https://github.com/ampheebyan/GAD176.2-G2 into sam
+|\  
+| * 846854d (origin/develop) Just scenes
+| *   9061292 Merge branch 'sam' into develop
+| |\  
+| | * 8da3667 just did some scene changes
+| * | 10229f2 Merge branch 'sam' into develop
+| |\| 
+| | * a5d9411 Versions control, some commenting
+* | | a9963aa commi
+| |/  
+|/|   
+| | * 875a53a (origin/phoebe) Creation of PatrolController.
+| | * c17534f TriggerDetectionZone implemented.
+| | * 414652d Adding comments and summaries.
+| | * a1d864f Implement enemy AI, some debug, and some performance changes.
+| | * 9b7b67a Light refactoring - using namespaces!
+| |/  
+| | * 7d6e7e8 (origin/harry) save
+| | * 1d00d1e Added Trip wire + Spike damage over time
+| | * 14f81d4 Added trip wire trap + Comments
+| | * 99b792d Added Damage + Modifiers for Traps
+| | * a47a8bb Added Colliders for trap + Fixed trap functionallity
+| | * 2d40c4b Added raycast for trap // WIP
+| | *   c1db946 Merge remote-tracking branch 'origin/develop' into harry
+| | |\  
+| | |/  
+| |/|   
+| * | 65ed9c7 Move changes to debug information around.
+| * | d26d152 Basic implementation of debug handling. Variable changes in BasePlayer and MovementHandler now send out update events. No visuals for debug menu yet though.
+| * | ca1afb7 Alterations to how Detections are handled: moved the "lock" mechanism out of DetectionBase and into DetectionMiddleman, which is the component responsible for "gluing" enemies (and other NPCs) to the Detection system. Baseline implementation of SoundEmitter/Receiver/Type, with an Editor script for emitter: needs lots of testing.
+| * | d481b7c Basic functionality of VisionDetection implemented. DetectionBase also mostly functional.
+| * | cb64164 Implementation of GlobalReference. Beginning work on Detection stuff. Updates to LocalPlayer making use of GlobalReference to have a consistently referenceable object for LocalPlayer.
+| | *   382b774 Merge remote-tracking branch 'origin/develop' into harry
+| | |\  
+| | |/  
+| |/|   
+| * | 9929bc1 Implemented base class for Character types, and started with implementing LocalPlayer. Character controller is also functionally complete, but still will leave as marked in progress until movement style has been finalised.
+| | * e5cd3ff Added Trap functionality
+| | * 3a7d07b Added Script Names + Outline for Traps
+| |/  
+| | *   7d6a2b9 (origin/main, origin/HEAD, main) Merge pull request #1 from ampheebyan/sam
+| | |\  
+| |_|/  
+|/| |   
+* | | de24d1a commit
+* | | 9a7f75e Commit
+* | | 268cec7 Commit
+* | | 0154b3f commit
+* | |   eb6cd8b Merge branch 'main' into sam
+|\ \ \  
+| | |/  
+| |/|   
+| * | 15c51e1 (origin/Alice) commit
+| |/  
+* / 3ab8cc3 Commit
+|/  
+* 750f13a (origin/josh, origin/alice, alice) Cleanup, create asset structure.
+* 291458d base unity project
+* d22abc6 README.md
+* c8cf4e1 Initial commit

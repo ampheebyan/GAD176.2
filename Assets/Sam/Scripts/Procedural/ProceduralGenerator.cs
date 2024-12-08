@@ -1,3 +1,7 @@
+/// <summary>
+/// Handles procedural generation of items in the scene using specified spawn modes 
+/// (CubeShaped or Irregular). Ensures valid spawn positions and collision constraints.
+/// </summary>
 using UnityEngine;
 
 namespace SpawnSystem
@@ -6,13 +10,17 @@ namespace SpawnSystem
     {
         public enum SpawnMode
         {
-            CubeShaped, // Use cube-shaped zones
-            Irregular   // Use irregular polygon-based zones, was recommended to do just in case, echnically of no use though
+            CubeShaped, // Use cube-shaped spawn zones
+            Irregular   // Use irregular polygon-based spawn zones most likely wont use
         }
 
         [Header("Spawn Settings")]
-        [SerializeField] private SpawnMode spawnMode = SpawnMode.CubeShaped; // Choose spawn mode
+        [SerializeField] private SpawnMode spawnMode = SpawnMode.CubeShaped; // Selects the spawn mode
+        [SerializeField] private float minSpawnDistance = 1.0f;             // Minimum distance between spawned items
 
+        /// <summary>
+        /// Spawns items based on the selected spawn mode and ensures valid positions.
+        /// </summary>
         public override void SpawnItems()
         {
             for (int i = 0; i < numberOfItemsToSpawn; i++)
@@ -21,11 +29,13 @@ namespace SpawnSystem
 
                 if (spawnPosition != Vector3.zero)
                 {
-                    Instantiate(
+                    var newObject = Instantiate(
                         itemsToSpawn[Random.Range(0, itemsToSpawn.Length)],
                         spawnPosition,
                         Quaternion.identity
                     );
+
+                    Debug.Log($"Spawned {newObject.name} at {spawnPosition}");
                 }
                 else
                 {
@@ -33,11 +43,11 @@ namespace SpawnSystem
                 }
             }
         }
-        private void Start()
-        {
-        SpawnItems();
-        }   
 
+        /// <summary>
+        /// Determines a valid spawn position based on the spawn mode and constraints.
+        /// <returns>A valid spawn position or Vector3.zero if none is found.</returns>
+        /// </summary>
         protected override Vector3 GetValidSpawnPosition()
         {
             int attempts = 50; // Limit attempts to prevent infinite loops
@@ -60,9 +70,11 @@ namespace SpawnSystem
             return Vector3.zero; // Return zero if no valid position is found
         }
 
+        /// <summary>
+        /// Gets a random position within a cube-shaped spawn area.
+        /// </summary>
         private Vector3 GetRandomPointInCubeArea()
         {
-            // Choose a random cube-shaped spawn area
             GameObject randomArea = spawnAreas[Random.Range(0, spawnAreas.Length)];
             Collider areaCollider = randomArea.GetComponent<Collider>();
 
@@ -72,7 +84,6 @@ namespace SpawnSystem
                 return Vector3.zero;
             }
 
-            // Generate a random point within the bounds
             Bounds bounds = areaCollider.bounds;
             return new Vector3(
                 Random.Range(bounds.min.x, bounds.max.x),
@@ -81,9 +92,11 @@ namespace SpawnSystem
             );
         }
 
+        /// <summary>
+        /// Gets a random position within an irregular spawn area.
+        /// </summary>
         private Vector3 GetRandomPointInIrregularArea()
         {
-            // Choose a random irregular-shaped spawn area
             GameObject randomArea = spawnAreas[Random.Range(0, spawnAreas.Length)];
             Collider areaCollider = randomArea.GetComponent<Collider>();
 
@@ -93,7 +106,6 @@ namespace SpawnSystem
                 return Vector3.zero;
             }
 
-            // Generate a random point within the bounds of the irregular area
             Bounds bounds = areaCollider.bounds;
             return new Vector3(
                 Random.Range(bounds.min.x, bounds.max.x),
@@ -102,16 +114,31 @@ namespace SpawnSystem
             );
         }
 
+        /// <summary>
+        /// Validates the position to ensure no collisions and proper distance from other objects.
+        /// <returns>True if the position is valid; otherwise, false.</returns>
+        /// </summary>
         private bool IsPositionValid(Vector3 position)
         {
-            // Check for overlaps with other objects
+            // Ensure no collisions and enforce minimum spawn distance
             Collider[] hitColliders = Physics.OverlapSphere(position, collisionCheckRadius, exclusionLayer);
-            return hitColliders.Length == 0; // Valid if no colliders are detected
+            if (hitColliders.Length > 0)
+                return false;
+
+            foreach (var obj in FindObjectsOfType<GameObject>())
+            {
+                if (Vector3.Distance(obj.transform.position, position) < minSpawnDistance)
+                    return false;
+            }
+
+            return true;
         }
 
+        /// <summary>
+        /// Checks if the position is blocked by a wall using raycasting.
+        /// <returns>True if blocked by a wall; otherwise, false.</returns>
         private bool IsBlockedByWall(Vector3 position)
         {
-            // Use raycasting to ensure the position isn't blocked by a wall
             Ray ray = new Ray(position + Vector3.up * 2f, Vector3.down);
             if (Physics.Raycast(ray, out RaycastHit hit, 4f, wallLayer))
             {
@@ -121,28 +148,29 @@ namespace SpawnSystem
             return false;
         }
 
+        /// <summary>
+        /// Draws spawn area gizmos in the scene view for visualization.
+        /// </summary>
         private void OnDrawGizmos()
         {
-            // Visualize spawn areas in the editor
-            Gizmos.color = Color.green;
+            Gizmos.color = spawnMode == SpawnMode.CubeShaped ? Color.blue : Color.yellow;
+
             foreach (GameObject area in spawnAreas)
             {
                 Collider areaCollider = area.GetComponent<Collider>();
                 if (areaCollider != null)
                 {
-                    Gizmos.DrawWireCube(areaCollider.bounds.center, areaCollider.bounds.size);
+                    if (spawnMode == SpawnMode.CubeShaped)
+                        Gizmos.DrawWireCube(areaCollider.bounds.center, areaCollider.bounds.size);
+                    else
+                        Gizmos.DrawWireSphere(areaCollider.bounds.center, collisionCheckRadius);
                 }
             }
+        }
 
-            // Visualize collision check radius
-            Gizmos.color = Color.red;
-            foreach (GameObject area in spawnAreas)
-            {
-                if (area != null)
-                {
-                    Gizmos.DrawWireSphere(area.transform.position, collisionCheckRadius);
-                }
-            }
+        private void Start()
+        {
+            SpawnItems(); // Begin spawning items on start
         }
     }
 }
